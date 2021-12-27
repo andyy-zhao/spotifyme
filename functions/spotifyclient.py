@@ -1,6 +1,7 @@
 import requests
 import json
 from track import Track
+from playlist import Playlist
 
 class SpotifyClient:
     def __init__(self, authorization_token, user_id):
@@ -48,7 +49,7 @@ class SpotifyClient:
         tracks = [Track(track["track"]["name"], track["track"]["id"], track["track"]["artists"][0]["name"]) for track in response_json["items"]]
         return tracks
 
-    def get_track_recommendations(self, seed_tracks, limit = 50):
+    def get_track_recommendations(self, seed_tracks, limit=50):
         """Get a list of recommended tracks starting from a number of seed tracks.
 
         :param seed_tracks (list of Track): Reference tracks to get recommendations. Should be 5 or less.
@@ -72,13 +73,35 @@ class SpotifyClient:
         :param name (str): New playlist name
         :return playlist (Playlist): Newly created playlist
         """
+        # Request body
+        data = json.dumps({
+            "name": name,
+            "description": "Recommended songs",
+            "public": True
+        })
 
+        url = f"https://api.spotify.com/v1/users/{self.user_id}/playlists"
+        response = self.post_api_request(url, data)
+        response_json = response.json()
 
+        playlist_id = response_json["id"]
+        playlist = Playlist(name, playlist_id)
+        return playlist
 
+    def add_songs(self, playlist, tracks):
+        """Add tracks to a playlist.
+        :param playlist (Playlist): Playlist to which to add tracks
+        :param tracks (list of Track): Tracks to be added to playlist
+        :return response: API response
+        """
+        track_uris = [track.get_spotify_uri() for track in tracks]
+        data = json.dumps(track_uris)
+        url = f"https://api.spotify.com/v1/playlists/{playlist.id}/tracks"
+        response = self.post_api_request(url, data)
+        response_json = response.json()
+        return response_json
 
-
-
-# lastplayedtracks = SpotifyClient('BQAU_pTKm3gkfh8gGhWWxhNvEDzy8CYyeHq3_LFCe6OAj9b50ocY4j58V5L0naKsXsHWGVzChdAJhw1kDX2JhVV7rCUjLQ_A4FZPAefFg0DRa6iH9KAJcXAVP71GLbYn_ha323MELq68CgxDfjCljk18HcVwc-gegjXCEoaR7bVlKKdQbp4edgdUofYqeDmShuNc_NyOnXnyTH5W', 'gsyduhgozpv87cedz8ap5wmh4')
+# lastplayedtracks = SpotifyClient('BQDZmjahIpYuU6ztj2rQ6Y5nVUW5TUiuC6-JW9pVXsZicxg_w5qQLTjv-E3KaIpTYOKSy_JY4yRSDx4GLC6oEJ6NXpj0--19aGD0FaDo4yGTjlzBco380y9qg5PEB_9yRziKKkYFGsJykIe4E4abt5QU2haD2UGldLpp6sGoAMtsUgKz13wlJoBvMJ5CDaqBLfJ6lIh6U3dOTDhE3uyySJnESQg2jD5Q-lwb7mRZu1c4kxzUr1JJmuP02HqChNk', 'gsyduhgozpv87cedz8ap5wmh4')
 # lastplayedtrackslst = lastplayedtracks.get_last_played_tracks(3)
 # print(lastplayedtrackslst)
 

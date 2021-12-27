@@ -61,7 +61,7 @@ class SpotifyClient:
         for seed_track in seed_tracks:
             seed_tracks_url += seed_track.id + ","
             # removing comma at the end
-            seed_tracks_url = seed_tracks_url[:-1]
+        seed_tracks_url = seed_tracks_url[:-1]
         url = f"https://api.spotify.com/v1/recommendations?seed_tracks={seed_tracks_url}&limit={limit}"
         response = self.get_api_request(url)
         response_json = response.json()

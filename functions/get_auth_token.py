@@ -23,4 +23,5 @@ class GetAuthToken:
             logging.error(ex)
 
 token = GetAuthToken()
+print("access token")
 print(token.get_auth_token())

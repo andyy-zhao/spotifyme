@@ -10,9 +10,10 @@ class Track:
         self.name = name
         self.id = id
         self.artist = artist
-
+    
     def get_spotify_uri(self):
         return f"spotify:track:{self.id}"
     
+    # returns string
     def __str__(self): 
         return self.name + " by " + self.artist

@@ -22,7 +22,9 @@ def main():
         seed_tracks.append(last_played[int(index) - 1])
 
     # get recommended tracks based off seed tracks
-    recommended_tracks = spotify_client.get_track_recommendations(seed_tracks)
+    print("\nHow many recommended tracks would you like to see? (1 - 100)")
+    num = int(input())
+    recommended_tracks = spotify_client.get_track_recommendations(seed_tracks, num)
 
     print("\nHere are the recommended tracks which will be included in your new playlist:")
     for index, track in enumerate(recommended_tracks):

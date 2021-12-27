@@ -33,8 +33,8 @@ class SpotifyClient:
         )
         return response
     
-    def get_last_played_tracks(self, limit = 10):
-        """ Get the last 10 tracks played by user
+    def get_last_played_tracks(self, limit = 30):
+        """ Get the last 30 tracks played by user
 
         :param limit (int): Number of tracks to get. Should be <= 50
         :return tracks (list of Track): List of last played tracks
@@ -49,7 +49,7 @@ class SpotifyClient:
         tracks = [Track(track["track"]["name"], track["track"]["id"], track["track"]["artists"][0]["name"]) for track in response_json["items"]]
         return tracks
 
-    def get_track_recommendations(self, seed_tracks, limit=50):
+    def get_track_recommendations(self, seed_tracks, limit=100):
         """Get a list of recommended tracks starting from a number of seed tracks.
 
         :param seed_tracks (list of Track): Reference tracks to get recommendations. Should be 5 or less.
